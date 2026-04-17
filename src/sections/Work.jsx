@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Reveal from '../components/Reveal'
 import { PROJECTS } from '../data/index.js'
 
-const FILTERS = ['All', 'Restaurant', 'Health & Beauty', 'Local Business']
+const FILTERS = ['All','Local Business']
 
 function ProjectPlaceholder() {
   return (

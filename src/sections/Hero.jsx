@@ -91,7 +91,7 @@ export default function Hero({ scrollTo }) {
 
             {/* Stats */}
             <div className="fade-up flex flex-wrap gap-8 mt-14" style={{ animationDelay: '0.55s' }}>
-              {[['30+', 'Sites launched'], ['5 yrs', 'In business'], ['100%', 'Client satisfaction']].map(([num, label]) => (
+              {[['1', 'Sites launched'], ['1 yrs', 'In business'], ['100%', 'Client satisfaction']].map(([num, label]) => (
                 <div key={label}>
                   <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.4rem', fontWeight: 600, color: '#C8856A', lineHeight: 1 }}>{num}</div>
                   <div style={{ fontSize: '0.75rem', color: '#8A6658', marginTop: '0.3rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</div>
