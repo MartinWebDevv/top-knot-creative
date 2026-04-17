@@ -11,15 +11,15 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" style={{ padding: '8rem 2.5rem', background: '#2C1810' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start' }}>
+    <section id="contact" style={{ padding: '5rem 1.5rem', background: '#2C1810' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: '4rem', alignItems: 'start' }}>
 
         <Reveal>
           <p style={{ fontSize: '0.78rem', color: '#1E7B6E', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 500, marginBottom: '0.75rem' }}>Get in touch</p>
-          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2rem, 3vw, 3rem)', fontWeight: 600, color: '#FAF6F1', lineHeight: 1.15, marginBottom: '1.5rem' }}>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.8rem, 3vw, 3rem)', fontWeight: 600, color: '#FAF6F1', lineHeight: 1.15, marginBottom: '1.5rem' }}>
             Let's build something<br/><em style={{ color: '#C8856A' }}>worth showing off.</em>
           </h2>
-          <p style={{ color: 'rgba(250,246,241,0.6)', lineHeight: 1.8, fontWeight: 300, fontSize: '0.97rem', marginBottom: '2.5rem' }}>
+          <p style={{ color: 'rgba(250,246,241,0.6)', lineHeight: 1.8, fontWeight: 300, fontSize: '0.97rem', marginBottom: '2rem' }}>
             Whether you're starting from scratch or ready for a redesign, I'd love to hear about your business. Drop me a message and I'll get back to you within one business day.
           </p>
           <div className="flex flex-col gap-4">
@@ -75,7 +75,7 @@ export default function Contact() {
                       width: '100%', background: 'rgba(250,246,241,0.06)',
                       border: '1px solid rgba(200,133,106,0.25)', borderRadius: 4,
                       padding: '0.85rem 1rem', color: '#FAF6F1',
-                      fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box',
+                      fontSize: '1rem', outline: 'none', boxSizing: 'border-box',
                       transition: 'border-color 0.2s ease',
                     }}
                     onFocus={e => e.target.style.borderColor = 'rgba(30,123,110,0.7)'}
@@ -97,7 +97,7 @@ export default function Contact() {
                     width: '100%', background: 'rgba(250,246,241,0.06)',
                     border: '1px solid rgba(200,133,106,0.25)', borderRadius: 4,
                     padding: '0.85rem 1rem', color: '#FAF6F1',
-                    fontSize: '0.95rem', outline: 'none', resize: 'vertical',
+                    fontSize: '1rem', outline: 'none', resize: 'vertical',
                     boxSizing: 'border-box', fontFamily: "'DM Sans', sans-serif",
                     transition: 'border-color 0.2s ease',
                   }}
