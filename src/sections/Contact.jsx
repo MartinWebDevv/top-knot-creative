@@ -7,13 +7,23 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    business: "",
     phoneNumber: "",
+    business: "",
     message: "",
+    contactPreference: [],
   });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
+
+  const handlePreference = (value) => {
+    setFormData(p => ({
+      ...p,
+      contactPreference: p.contactPreference.includes(value)
+        ? p.contactPreference.filter(v => v !== value)
+        : [...p.contactPreference, value],
+    }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,15 +37,18 @@ export default function Contact() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          business: formData.business,
           phoneNumber: formData.phoneNumber,
+          business: formData.business,
+          contactPreference: formData.contactPreference.length > 0
+            ? formData.contactPreference.join(', ')
+            : 'No preference specified',
           message: formData.message,
         }),
       });
 
       if (res.ok) {
         setSubmitted(true);
-        setFormData({ name: "", email: "", business: "", message: "" });
+        setFormData({ name: "", email: "", phoneNumber: "", business: "", message: "", contactPreference: [] });
       } else {
         setError("Something went wrong. Please try again or email me directly.");
       }
@@ -46,57 +59,47 @@ export default function Contact() {
     }
   };
 
+  const inputStyle = {
+    width: "100%",
+    background: "rgba(250,246,241,0.06)",
+    border: "1px solid rgba(200,133,106,0.25)",
+    borderRadius: 4,
+    padding: "0.85rem 1rem",
+    color: "#FAF6F1",
+    fontSize: "1rem",
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "border-color 0.2s ease",
+  }
+
+  const labelStyle = {
+    display: "block",
+    fontSize: "0.78rem",
+    color: "rgba(250,246,241,0.5)",
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
+    marginBottom: "0.5rem",
+  }
+
   return (
-    <section
-      id="contact"
-      style={{ padding: "5rem 1.5rem", background: "#2C1810" }}
-    >
-      <div
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
-          gap: "4rem",
-          alignItems: "start",
-        }}
-      >
+    <section id="contact" style={{ padding: "5rem 1.5rem", background: "#2C1810" }}>
+      <div style={{
+        maxWidth: 1100,
+        margin: "0 auto",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
+        gap: "4rem",
+        alignItems: "start",
+      }}>
         <Reveal>
-          <p
-            style={{
-              fontSize: "0.78rem",
-              color: "#1E7B6E",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              fontWeight: 500,
-              marginBottom: "0.75rem",
-            }}
-          >
+          <p style={{ fontSize: "0.78rem", color: "#1E7B6E", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 500, marginBottom: "0.75rem" }}>
             Get in touch
           </p>
-          <h2
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "clamp(1.8rem, 3vw, 3rem)",
-              fontWeight: 600,
-              color: "#FAF6F1",
-              lineHeight: 1.15,
-              marginBottom: "1.5rem",
-            }}
-          >
-            Let's build something
-            <br />
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(1.8rem, 3vw, 3rem)", fontWeight: 600, color: "#FAF6F1", lineHeight: 1.15, marginBottom: "1.5rem" }}>
+            Let's build something<br />
             <em style={{ color: "#C8856A" }}>worth showing off.</em>
           </h2>
-          <p
-            style={{
-              color: "rgba(250,246,241,0.6)",
-              lineHeight: 1.8,
-              fontWeight: 300,
-              fontSize: "0.97rem",
-              marginBottom: "2rem",
-            }}
-          >
+          <p style={{ color: "rgba(250,246,241,0.6)", lineHeight: 1.8, fontWeight: 300, fontSize: "0.97rem", marginBottom: "2rem" }}>
             Whether you're starting from scratch or ready for a redesign, I'd
             love to hear about your business. Drop me a message and I'll get
             back to you within one business day.
@@ -108,25 +111,10 @@ export default function Contact() {
               { label: "Based in", value: "Las Vegas, NV" },
             ].map(({ label, value }) => (
               <div key={label} className="flex gap-3 items-start">
-                <span
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "#1E7B6E",
-                    fontWeight: 500,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    paddingTop: "0.15rem",
-                    minWidth: 60,
-                  }}
-                >
+                <span style={{ fontSize: "0.75rem", color: "#1E7B6E", fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase", paddingTop: "0.15rem", minWidth: 60 }}>
                   {label}
                 </span>
-                <span
-                  style={{
-                    color: "rgba(250,246,241,0.75)",
-                    fontSize: "0.95rem",
-                  }}
-                >
+                <span style={{ color: "rgba(250,246,241,0.75)", fontSize: "0.95rem" }}>
                   {value}
                 </span>
               </div>
@@ -136,150 +124,120 @@ export default function Contact() {
 
         <Reveal delay={0.15}>
           {submitted ? (
-            <div
-              style={{
-                background: "rgba(200,133,106,0.1)",
-                border: "1px solid rgba(200,133,106,0.25)",
-                borderRadius: 8,
-                padding: "3rem",
-                textAlign: "center",
-              }}
-            >
+            <div style={{ background: "rgba(200,133,106,0.1)", border: "1px solid rgba(200,133,106,0.25)", borderRadius: 8, padding: "3rem", textAlign: "center" }}>
               <div style={{ color: "#1E7B6E", marginBottom: "1rem" }}>
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 48 48"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="24" cy="24" r="20" />
                   <path d="M14 24l7 7 13-14" />
                 </svg>
               </div>
-              <h3
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "1.6rem",
-                  color: "#FAF6F1",
-                  fontWeight: 600,
-                  marginBottom: "0.75rem",
-                }}
-              >
+              <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.6rem", color: "#FAF6F1", fontWeight: 600, marginBottom: "0.75rem" }}>
                 Message sent!
               </h3>
               <p style={{ color: "rgba(250,246,241,0.6)", fontWeight: 300 }}>
-                Thanks for reaching out. I'll get back to you within one
-                business day.
+                Thanks for reaching out. I'll get back to you within one business day.
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1.25rem",
-              }}
-            >
-              {[
-                { name: "name", label: "Your name", type: "text", required: true },
-                { name: "email", label: "Email address", type: "email", required: true },
-                {name: "phoneNumber", label: "Phone Number", type: "number", required: false},
-                { name: "business", label: "Business name", type: "text", required: false },
-              ].map(({ name, label, type, required }) => (
-                <div key={name}>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: "0.78rem",
-                      color: "rgba(250,246,241,0.5)",
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    {label}
-                    {required && <span style={{ color: "#C8856A" }}> *</span>}
-                  </label>
-                  <input
-                    type={type}
-                    required={required}
-                    value={formData[name]}
-                    onChange={(e) =>
-                      setFormData((p) => ({ ...p, [name]: e.target.value }))
-                    }
-                    style={{
-                      width: "100%",
-                      background: "rgba(250,246,241,0.06)",
-                      border: "1px solid rgba(200,133,106,0.25)",
-                      borderRadius: 4,
-                      padding: "0.85rem 1rem",
-                      color: "#FAF6F1",
-                      fontSize: "1rem",
-                      outline: "none",
-                      boxSizing: "border-box",
-                      transition: "border-color 0.2s ease",
-                    }}
-                    onFocus={(e) =>
-                      (e.target.style.borderColor = "rgba(30,123,110,0.7)")
-                    }
-                    onBlur={(e) =>
-                      (e.target.style.borderColor = "rgba(200,133,106,0.25)")
-                    }
-                  />
-                </div>
-              ))}
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+
+              {/* Name */}
               <div>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "0.78rem",
-                    color: "rgba(250,246,241,0.5)",
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Message <span style={{ color: "#C8856A" }}>*</span>
-                </label>
-                <textarea
-                  required
-                  rows={5}
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, message: e.target.value }))
-                  }
-                  placeholder="Tell me a bit about your business and what you're looking for..."
-                  style={{
-                    width: "100%",
-                    background: "rgba(250,246,241,0.06)",
-                    border: "1px solid rgba(200,133,106,0.25)",
-                    borderRadius: 4,
-                    padding: "0.85rem 1rem",
-                    color: "#FAF6F1",
-                    fontSize: "1rem",
-                    outline: "none",
-                    resize: "vertical",
-                    boxSizing: "border-box",
-                    fontFamily: "'DM Sans', sans-serif",
-                    transition: "border-color 0.2s ease",
-                  }}
-                  onFocus={(e) =>
-                    (e.target.style.borderColor = "rgba(30,123,110,0.7)")
-                  }
-                  onBlur={(e) =>
-                    (e.target.style.borderColor = "rgba(200,133,106,0.25)")
-                  }
+                <label style={labelStyle}>Your name <span style={{ color: "#C8856A" }}>*</span></label>
+                <input type="text" required value={formData.name}
+                  onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
+                  style={inputStyle}
+                  onFocus={e => e.target.style.borderColor = "rgba(30,123,110,0.7)"}
+                  onBlur={e => e.target.style.borderColor = "rgba(200,133,106,0.25)"}
                 />
               </div>
 
-              {/* Error message */}
+              {/* Email */}
+              <div>
+                <label style={labelStyle}>Email address <span style={{ color: "#C8856A" }}>*</span></label>
+                <input type="email" required value={formData.email}
+                  onChange={e => setFormData(p => ({ ...p, email: e.target.value }))}
+                  style={inputStyle}
+                  onFocus={e => e.target.style.borderColor = "rgba(30,123,110,0.7)"}
+                  onBlur={e => e.target.style.borderColor = "rgba(200,133,106,0.25)"}
+                />
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label style={labelStyle}>Phone number <span style={{ color: "#C8856A" }}>*</span></label>
+                <input type="tel" required value={formData.phoneNumber}
+                  onChange={e => setFormData(p => ({ ...p, phoneNumber: e.target.value }))}
+                  placeholder="(702) 555-0100"
+                  style={inputStyle}
+                  onFocus={e => e.target.style.borderColor = "rgba(30,123,110,0.7)"}
+                  onBlur={e => e.target.style.borderColor = "rgba(200,133,106,0.25)"}
+                />
+              </div>
+
+              {/* Contact preference checkboxes */}
+              <div>
+                <label style={labelStyle}>Preferred contact method</label>
+                <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
+                  {["Email", "Phone"].map(option => {
+                    const checked = formData.contactPreference.includes(option)
+                    return (
+                      <label key={option} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                        <div
+                          onClick={() => handlePreference(option)}
+                          style={{
+                            width: 18, height: 18,
+                            borderRadius: 3,
+                            border: `1.5px solid ${checked ? '#1E7B6E' : 'rgba(200,133,106,0.4)'}`,
+                            background: checked ? '#1E7B6E' : 'transparent',
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            cursor: "pointer",
+                            transition: "all 0.2s ease",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {checked && (
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#FAF6F1" strokeWidth="2">
+                              <path d="M1.5 5l2.5 2.5 4.5-5"/>
+                            </svg>
+                          )}
+                        </div>
+                        <span style={{ fontSize: "0.9rem", color: "rgba(250,246,241,0.7)", userSelect: "none" }}
+                          onClick={() => handlePreference(option)}
+                        >
+                          {option}
+                        </span>
+                      </label>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Business */}
+              <div>
+                <label style={labelStyle}>Business name</label>
+                <input type="text" value={formData.business}
+                  onChange={e => setFormData(p => ({ ...p, business: e.target.value }))}
+                  style={inputStyle}
+                  onFocus={e => e.target.style.borderColor = "rgba(30,123,110,0.7)"}
+                  onBlur={e => e.target.style.borderColor = "rgba(200,133,106,0.25)"}
+                />
+              </div>
+
+              {/* Message */}
+              <div>
+                <label style={labelStyle}>Message <span style={{ color: "#C8856A" }}>*</span></label>
+                <textarea required rows={5} value={formData.message}
+                  onChange={e => setFormData(p => ({ ...p, message: e.target.value }))}
+                  placeholder="Tell me a bit about your business and what you're looking for..."
+                  style={{ ...inputStyle, resize: "vertical", fontFamily: "'DM Sans', sans-serif" }}
+                  onFocus={e => e.target.style.borderColor = "rgba(30,123,110,0.7)"}
+                  onBlur={e => e.target.style.borderColor = "rgba(200,133,106,0.25)"}
+                />
+              </div>
+
               {error && (
-                <p style={{ color: "#C8856A", fontSize: "0.88rem", margin: 0 }}>
-                  {error}
-                </p>
+                <p style={{ color: "#C8856A", fontSize: "0.88rem", margin: 0 }}>{error}</p>
               )}
 
               <button
@@ -297,8 +255,8 @@ export default function Contact() {
                   transition: "background 0.2s ease",
                   alignSelf: "flex-start",
                 }}
-                onMouseEnter={(e) => { if (!sending) e.target.style.background = "#A8654A" }}
-                onMouseLeave={(e) => { if (!sending) e.target.style.background = "#C8856A" }}
+                onMouseEnter={e => { if (!sending) e.target.style.background = "#A8654A" }}
+                onMouseLeave={e => { if (!sending) e.target.style.background = "#C8856A" }}
               >
                 {sending ? "Sending..." : "Send message →"}
               </button>
