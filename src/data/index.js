@@ -1,12 +1,25 @@
+// accent colors: '#A07868','#C8856A','#7D6558','#B87868','#C29060','#8A7D60',
+
+
 export const PROJECTS = [
   // {
   //   title: 'Crystal Alley Emporium',
   //   category: 'Local Business',
-  //   tags: ['Branding', 'Web Design', 'Store Front'],
+  //   tags: ['Branding', 'Web Design'],
   //   accent: '#C8856A',
-  //   desc: 'Fully custom, light E-Commerce site with event booking and customer testimonies.',
-  // },
-
+  //   desc: 'Fully Custom Website with event booking',
+  //   url: null,
+  // },  
+  {
+    title: 'All Kustoms',
+    category: 'E-Commerce',
+    tags: ['E-Commerce', 'Web Design', 'Ordering'],
+    accent: '#7D6558',
+    desc: 'Built with Shopify, an E-Commerce site with customizable gifts',
+    url: 'https://allkustomz.com/',
+    image: 'kustom-logo.png',
+  },
+  
 ]
 
 export const SERVICES = [
@@ -32,41 +45,18 @@ export const SERVICES = [
 
 export const TESTIMONIALS = [
   // {
-  //   name: 'You Could Be Here',
-  //   business: 'Your Business',
-  //   initials: 'YOU',
-  //   quote: "The first client to leave a testimonial.",
-  // },
-  // {
   //   name: 'Rosa Méndez',
   //   business: 'La Paloma Taqueria',
   //   initials: 'RM',
   //   quote: "Martin took our outdated site and turned it into something we're genuinely proud to show people. Our online orders doubled in the first two months.",
   // },
-  // {
-  //   name: 'Sandra & Pete Horton',
-  //   business: 'Westside Hardware Co.',
-  //   initials: 'SP',
-  //   quote: "We'd been putting off a redesign for years. Martin made it painless and the result is better than anything we imagined. Customers comment on it constantly.",
-  // },
-  // {
-  //   name: 'Jade Tran',
-  //   business: 'Bloom Beauty Studio',
-  //   initials: 'JT',
-  //   quote: 'Not only is the site gorgeous, the booking system he built has saved us hours every single week. Worth every penny — and then some.',
-  // },
-  // {
-  //   name: 'Carlos Vega',
-  //   business: 'Ember & Oak Kitchen',
-  //   initials: 'CV',
-  //   quote: "I told Martin the vibe I wanted and he just got it. The site feels exactly like our restaurant. We've had so many compliments from new guests who found us online.",
-  // },
+
 ]
 
 export const FAQS = [
   {
     q: 'How long does a website take to build?',
-    a: 'Most projects take 2-5 weeks from kickoff to launch. Timeline depends on the number of pages, how quickly you can provide content, and any special features needed.',
+    a: 'Most projects take 2–5 weeks from kickoff to launch. Timeline depends on the number of pages, how quickly you can provide content, and any special features needed.',
   },
   {
     q: 'Do I need to provide my own content and photos?',
@@ -78,7 +68,7 @@ export const FAQS = [
   },
   {
     q: 'What platform do you build on?',
-    a: "Depending on your needs, I work with custom React builds. Primarily using React + Vite/Tailwind CSS.",
+    a: "Depending on your needs, I work with custom React builds. Primarily i use React + Vite with TailWind CSS",
   },
   {
     q: 'Do you offer payment plans?',

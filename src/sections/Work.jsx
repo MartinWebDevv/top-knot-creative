@@ -2,7 +2,12 @@ import { useState } from 'react'
 import Reveal from '../components/Reveal'
 import { PROJECTS } from '../data/index.js'
 
-const FILTERS = ['All','Local Business']
+// Import project images — add a new entry here for each project image
+const PROJECT_IMAGES = {
+  'kustom-logo.png': new URL('../assets/kustom-logo.png', import.meta.url).href,
+}
+
+const FILTERS = ['All','Local Business', 'E-Commerce']
 
 function ProjectPlaceholder() {
   return (
@@ -12,6 +17,20 @@ function ProjectPlaceholder() {
       <rect x="24" y="28" width="28" height="10" rx="1"/>
       <circle cx="13" cy="16" r="2" fill="rgba(255,255,255,0.4)" stroke="none"/>
     </svg>
+  )
+}
+
+function CardWrapper({ url, children }) {
+  if (!url) return <>{children}</>
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: 'none', display: 'block', color: 'inherit' }}
+    >
+      {children}
+    </a>
   )
 }
 
@@ -54,25 +73,46 @@ export default function Work() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
           {filtered.map((project, i) => (
             <Reveal key={project.title} delay={i * 0.07}>
-              <div className="project-card" style={{
-                background: '#F3EDE5', borderRadius: 8, overflow: 'hidden',
-                border: '1px solid rgba(200,133,106,0.15)',
-              }}>
-                <div style={{
-                  height: 210, background: project.accent,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  position: 'relative',
+              <CardWrapper url={project.url}>
+                <div className="project-card" style={{
+                  background: '#F3EDE5', borderRadius: 8, overflow: 'hidden',
+                  border: '1px solid rgba(200,133,106,0.15)',
+                  cursor: project.url ? 'pointer' : 'default',
                 }}>
-                  <ProjectPlaceholder/>
-                  <span style={{
-                    position: 'absolute', top: '1rem', right: '1rem',
-                    background: 'rgba(0,0,0,0.22)', borderRadius: 100,
-                    padding: '0.22rem 0.75rem',
-                    fontSize: '0.72rem', color: '#FAF6F1', letterSpacing: '0.04em',
+                  <div style={{
+                    height: 210, background: project.accent,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    position: 'relative',
                   }}>
-                    {project.category}
-                  </span>
-                </div>
+                    {project.image ? (
+                      <img
+                        src={PROJECT_IMAGES[project.image]}
+                        alt={project.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                      />
+                    ) : (
+                      <ProjectPlaceholder/>
+                    )}
+                    <span style={{
+                      position: 'absolute', top: '1rem', right: '1rem',
+                      background: 'rgba(0,0,0,0.22)', borderRadius: 100,
+                      padding: '0.22rem 0.75rem',
+                      fontSize: '0.72rem', color: '#FAF6F1', letterSpacing: '0.04em',
+                      zIndex: 1,
+                    }}>
+                      {project.category}
+                    </span>
+                    {project.url && (
+                      <span style={{
+                        position: 'absolute', bottom: '1rem', right: '1rem',
+                        background: 'rgba(30,123,110,0.85)', borderRadius: 100,
+                        padding: '0.22rem 0.75rem',
+                        fontSize: '0.72rem', color: '#FAF6F1', letterSpacing: '0.04em',
+                      }}>
+                        View site ↗
+                      </span>
+                    )}
+                  </div>
                 <div style={{ padding: '1.5rem' }}>
                   <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.45rem', fontWeight: 600, marginBottom: '0.5rem' }}>
                     {project.title}
@@ -92,7 +132,8 @@ export default function Work() {
                     ))}
                   </div>
                 </div>
-              </div>
+                </div>
+              </CardWrapper>
             </Reveal>
           ))}
         </div>
