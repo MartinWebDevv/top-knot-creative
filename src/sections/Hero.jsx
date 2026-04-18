@@ -1,4 +1,53 @@
+import { useEffect, useRef, useState } from 'react'
 import logo from '../assets/logo.png'
+
+function useCountUp(target, duration = 1500, start = false) {
+  const [count, setCount] = useState(0)
+  useEffect(() => {
+    if (!start) return
+    const isNum = !isNaN(parseInt(target))
+    if (!isNum) { setCount(target); return }
+    const num = parseInt(target)
+    const suffix = target.toString().replace(String(num), '')
+    let startTime = null
+    const step = timestamp => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.floor(eased * num) + suffix)
+      if (progress < 1) requestAnimationFrame(step)
+      else setCount(target)
+    }
+    requestAnimationFrame(step)
+  }, [start, target])
+  return count
+}
+
+function StatCounter({ num, label }) {
+  const ref = useRef(null)
+  const [started, setStarted] = useState(false)
+  const count = useCountUp(num, 1200, started)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setStarted(true) },
+      { threshold: 0.5 }
+    )
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
+
+  return (
+    <div ref={ref}>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.4rem', fontWeight: 600, color: '#C8856A', lineHeight: 1 }}>
+        {started ? count : '0'}
+      </div>
+      <div style={{ fontSize: '0.75rem', color: '#8A6658', marginTop: '0.3rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        {label}
+      </div>
+    </div>
+  )
+}
 
 export default function Hero({ scrollTo }) {
   return (
@@ -7,23 +56,39 @@ export default function Hero({ scrollTo }) {
       padding: '9rem 1.5rem 5rem',
       position: 'relative', overflow: 'hidden',
     }}>
-      {/* Decorative circles — hidden on small screens via opacity scaling */}
-      <div style={{
+      {/* Animated floating orbs */}
+      <div className="orb-a" style={{
         position: 'absolute', right: '-5vw', top: '50%', transform: 'translateY(-55%)',
         width: '52vw', maxWidth: 680, height: '52vw', maxHeight: 680,
         borderRadius: '50%',
-        background: 'radial-gradient(circle at 40% 50%, rgba(200,133,106,0.14) 0%, transparent 70%)',
+        background: 'radial-gradient(circle at 40% 50%, rgba(200,133,106,0.13) 0%, transparent 70%)',
         pointerEvents: 'none',
       }}/>
-      <div style={{
+      <div className="orb-b" style={{
         position: 'absolute', right: '10vw', top: '18%',
         width: '22vw', maxWidth: 300, height: '22vw', maxHeight: 300,
-        borderRadius: '50%', border: '1px solid rgba(200,133,106,0.18)',
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(30,123,110,0.07) 0%, transparent 70%)',
+        border: '1px solid rgba(200,133,106,0.15)',
+        pointerEvents: 'none',
+      }}/>
+      <div className="orb-c" style={{
+        position: 'absolute', right: '22vw', top: '60%',
+        width: '10vw', maxWidth: 140, height: '10vw', maxHeight: 140,
+        borderRadius: '50%',
+        border: '1px solid rgba(30,123,110,0.12)',
+        pointerEvents: 'none',
+      }}/>
+      <div className="orb-b" style={{
+        position: 'absolute', left: '-4vw', top: '30%',
+        width: '18vw', maxWidth: 240, height: '18vw', maxHeight: 240,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(200,133,106,0.06) 0%, transparent 70%)',
         pointerEvents: 'none',
       }}/>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', width: '100%' }}>
-        {/* Logo — shown on mobile above headline, hidden on desktop (shown in grid) */}
+        {/* Mobile logo */}
         <div className="flex justify-center mb-10 md:hidden fade-up" style={{ animationDelay: '0.1s' }}>
           <img
             src={logo}
@@ -36,7 +101,6 @@ export default function Hero({ scrollTo }) {
 
           {/* Left: text */}
           <div>
-            {/* Available badge */}
             <div className="fade-up" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.6rem',
               background: 'rgba(200,133,106,0.12)', borderRadius: 100,
@@ -89,14 +153,11 @@ export default function Hero({ scrollTo }) {
               </button>
             </div>
 
-            {/* Stats */}
+            {/* Stats with counter animation */}
             <div className="fade-up flex flex-wrap gap-8 mt-14" style={{ animationDelay: '0.55s' }}>
-              {[['1', 'Sites launched'], ['1 yrs', 'In business'], ['100%', 'Client satisfaction']].map(([num, label]) => (
-                <div key={label}>
-                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.4rem', fontWeight: 600, color: '#C8856A', lineHeight: 1 }}>{num}</div>
-                  <div style={{ fontSize: '0.75rem', color: '#8A6658', marginTop: '0.3rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</div>
-                </div>
-              ))}
+              <StatCounter num="1" label="Sites launched" />
+              <StatCounter num="1" label="Yrs in business" />
+              <StatCounter num="100%" label="Client satisfaction" />
             </div>
           </div>
 

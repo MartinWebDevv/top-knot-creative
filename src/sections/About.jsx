@@ -141,8 +141,9 @@ export default function About() {
             beyond. No middlemen, no hand-offs — just a direct line to the
             person building your site.
           </p>
+          {/* add skills here */}
           <div className="flex flex-wrap gap-2">
-            {["React & Vite", "Tailwind CSS", "SEO"].map((skill) => (
+            {["React & Vite", "Tailwind CSS"].map((skill) => (
               <span
                 key={skill}
                 style={{

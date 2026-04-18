@@ -1,13 +1,12 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Reveal from '../components/Reveal'
 import { PROJECTS } from '../data/index.js'
 
-// Import project images — add a new entry here for each project image
 const PROJECT_IMAGES = {
   'kustom-logo.png': new URL('../assets/kustom-logo.png', import.meta.url).href,
 }
 
-const FILTERS = ['All','Local Business', 'E-Commerce']
+const FILTERS = ['All', 'Local Business', 'E-Commerce']
 
 function ProjectPlaceholder() {
   return (
@@ -23,14 +22,42 @@ function ProjectPlaceholder() {
 function CardWrapper({ url, children }) {
   if (!url) return <>{children}</>
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ textDecoration: 'none', display: 'block', color: 'inherit' }}
-    >
+    <a href={url} target="_blank" rel="noopener noreferrer"
+      style={{ textDecoration: 'none', display: 'block', color: 'inherit' }}>
       {children}
     </a>
+  )
+}
+
+function TiltCard({ children, url }) {
+  const ref = useRef(null)
+
+  const handleMouseMove = e => {
+    const card = ref.current
+    if (!card) return
+    const { left, top, width, height } = card.getBoundingClientRect()
+    const x = (e.clientX - left) / width - 0.5
+    const y = (e.clientY - top) / height - 0.5
+    card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`
+    card.style.boxShadow = `${-x * 12}px ${y * 12}px 40px rgba(139,99,74,0.2)`
+  }
+
+  const handleMouseLeave = e => {
+    const card = ref.current
+    if (!card) return
+    card.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateY(0)'
+    card.style.boxShadow = 'none'
+  }
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transition: 'transform 0.15s ease, box-shadow 0.15s ease', borderRadius: 8 }}
+    >
+      {children}
+    </div>
   )
 }
 
@@ -73,67 +100,70 @@ export default function Work() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
           {filtered.map((project, i) => (
             <Reveal key={project.title} delay={i * 0.07}>
-              <CardWrapper url={project.url}>
-                <div className="project-card" style={{
-                  background: '#F3EDE5', borderRadius: 8, overflow: 'hidden',
-                  border: '1px solid rgba(200,133,106,0.15)',
-                  cursor: project.url ? 'pointer' : 'default',
-                }}>
-                  <div style={{
-                    height: 210, background: project.accent,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    position: 'relative',
+              <TiltCard url={project.url}>
+                <CardWrapper url={project.url}>
+                  <div className="project-card" style={{
+                    background: '#F3EDE5', borderRadius: 8, overflow: 'hidden',
+                    border: '1px solid rgba(200,133,106,0.15)',
+                    cursor: project.url ? 'pointer' : 'default',
                   }}>
-                    {project.image ? (
-                      <img
-                        src={PROJECT_IMAGES[project.image]}
-                        alt={project.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
-                      />
-                    ) : (
-                      <ProjectPlaceholder/>
-                    )}
-                    <span style={{
-                      position: 'absolute', top: '1rem', right: '1rem',
-                      background: 'rgba(0,0,0,0.22)', borderRadius: 100,
-                      padding: '0.22rem 0.75rem',
-                      fontSize: '0.72rem', color: '#FAF6F1', letterSpacing: '0.04em',
-                      zIndex: 1,
+                    <div style={{
+                      height: 210, background: project.accent,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      position: 'relative',
                     }}>
-                      {project.category}
-                    </span>
-                    {project.url && (
+                      {project.image ? (
+                        <img
+                          src={PROJECT_IMAGES[project.image]}
+                          alt={project.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                        />
+                      ) : (
+                        <ProjectPlaceholder/>
+                      )}
                       <span style={{
-                        position: 'absolute', bottom: '1rem', right: '1rem',
-                        background: 'rgba(30,123,110,0.85)', borderRadius: 100,
+                        position: 'absolute', top: '1rem', right: '1rem',
+                        background: 'rgba(0,0,0,0.22)', borderRadius: 100,
                         padding: '0.22rem 0.75rem',
                         fontSize: '0.72rem', color: '#FAF6F1', letterSpacing: '0.04em',
+                        zIndex: 1,
                       }}>
-                        View site ↗
+                        {project.category}
                       </span>
-                    )}
+                      {project.url && (
+                        <span style={{
+                          position: 'absolute', bottom: '1rem', right: '1rem',
+                          background: 'rgba(30,123,110,0.85)', borderRadius: 100,
+                          padding: '0.22rem 0.75rem',
+                          fontSize: '0.72rem', color: '#FAF6F1', letterSpacing: '0.04em',
+                          zIndex: 1,
+                        }}>
+                          View site ↗
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ padding: '1.5rem' }}>
+                      <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.45rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                        {project.title}
+                      </h3>
+                      <p style={{ fontSize: '0.88rem', color: '#5C3D2E', lineHeight: 1.75, marginBottom: '1.1rem', fontWeight: 300 }}>
+                        {project.desc}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tags.map(t => (
+                          <span key={t} style={{
+                            fontSize: '0.74rem', color: '#1E7B6E',
+                            padding: '0.2rem 0.65rem',
+                            border: '1px solid rgba(30,123,110,0.3)', borderRadius: 100,
+                          }}>
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                <div style={{ padding: '1.5rem' }}>
-                  <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.45rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-                    {project.title}
-                  </h3>
-                  <p style={{ fontSize: '0.88rem', color: '#5C3D2E', lineHeight: 1.75, marginBottom: '1.1rem', fontWeight: 300 }}>
-                    {project.desc}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map(t => (
-                      <span key={t} style={{
-                        fontSize: '0.74rem', color: '#1E7B6E',
-                        padding: '0.2rem 0.65rem',
-                        border: '1px solid rgba(30,123,110,0.3)', borderRadius: 100,
-                      }}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                </div>
-              </CardWrapper>
+                </CardWrapper>
+              </TiltCard>
             </Reveal>
           ))}
         </div>
