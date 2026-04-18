@@ -29,12 +29,12 @@ export const SERVICES = [
     desc: 'Custom-designed, mobile-first websites built to convert visitors into customers. Fast, accessible, and uniquely yours.',
     price: 'From $800',
   },
-  {
-    iconKey: 'globe',
-    title: 'SEO & Local Search',
-    desc: 'Get found by people in your neighborhood searching for exactly what you offer. Local SEO that actually moves the needle.',
-    price: 'From $200/mo',
-  },
+  // {
+  //   iconKey: 'globe',
+  //   title: 'SEO & Local Search',
+  //   desc: 'Get found by people in your neighborhood searching for exactly what you offer. Local SEO that actually moves the needle.',
+  //   price: 'From $200/mo',
+  // },
   {
     iconKey: 'chart',
     title: 'Website Care Plans',

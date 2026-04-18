@@ -1,18 +1,49 @@
 import { useState } from "react";
 import Reveal from "../components/Reveal";
 
+const FORMSPREE_URL = "https://formspree.io/f/xrerkezk";
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     business: "",
+    phoneNumber: "",
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError(null);
+
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          business: formData.business,
+          phoneNumber: formData.phoneNumber,
+          message: formData.message,
+        }),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        setFormData({ name: "", email: "", business: "", message: "" });
+      } else {
+        setError("Something went wrong. Please try again or email me directly.");
+      }
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -25,8 +56,7 @@ export default function Contact() {
           maxWidth: 1100,
           margin: "0 auto",
           display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
           gap: "4rem",
           alignItems: "start",
         }}
@@ -74,7 +104,7 @@ export default function Contact() {
           <div className="flex flex-col gap-4">
             {[
               { label: "Email", value: "martincwebdev@gmail.com" },
-              { label: "Phone", value: "(702) 772-0030" },
+              // { label: "Phone", value: "(702) 772-0030" },
               { label: "Based in", value: "Las Vegas, NV" },
             ].map(({ label, value }) => (
               <div key={label} className="flex gap-3 items-start">
@@ -154,24 +184,10 @@ export default function Contact() {
               }}
             >
               {[
-                {
-                  name: "name",
-                  label: "Your name",
-                  type: "text",
-                  required: true,
-                },
-                {
-                  name: "email",
-                  label: "Email address",
-                  type: "email",
-                  required: true,
-                },
-                {
-                  name: "business",
-                  label: "Business name",
-                  type: "text",
-                  required: false,
-                },
+                { name: "name", label: "Your name", type: "text", required: true },
+                { name: "email", label: "Email address", type: "email", required: true },
+                {name: "phoneNumber", label: "Phone Number", type: "number", required: false},
+                { name: "business", label: "Business name", type: "text", required: false },
               ].map(({ name, label, type, required }) => (
                 <div key={name}>
                   <label
@@ -258,24 +274,33 @@ export default function Contact() {
                   }
                 />
               </div>
+
+              {/* Error message */}
+              {error && (
+                <p style={{ color: "#C8856A", fontSize: "0.88rem", margin: 0 }}>
+                  {error}
+                </p>
+              )}
+
               <button
                 type="submit"
+                disabled={sending}
                 style={{
-                  background: "#C8856A",
+                  background: sending ? "#8A6658" : "#C8856A",
                   color: "#FAF6F1",
                   border: "none",
                   borderRadius: 4,
                   padding: "1rem 2rem",
                   fontSize: "1rem",
                   fontWeight: 500,
-                  cursor: "pointer",
+                  cursor: sending ? "not-allowed" : "pointer",
                   transition: "background 0.2s ease",
                   alignSelf: "flex-start",
                 }}
-                onMouseEnter={(e) => (e.target.style.background = "#A8654A")}
-                onMouseLeave={(e) => (e.target.style.background = "#C8856A")}
+                onMouseEnter={(e) => { if (!sending) e.target.style.background = "#A8654A" }}
+                onMouseLeave={(e) => { if (!sending) e.target.style.background = "#C8856A" }}
               >
-                Send message →
+                {sending ? "Sending..." : "Send message →"}
               </button>
             </form>
           )}
